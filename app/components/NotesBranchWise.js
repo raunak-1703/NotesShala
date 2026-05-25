@@ -1,11 +1,11 @@
 "use client"
 import Link from 'next/link'
 import React from 'react'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import useShowToast from '@/hooks/useShowToast'
+import { useAuth } from '@/app/lib/useAuth'
 
 const NotesBranchWise = () => {
-    const { isAuthenticated } = useKindeBrowserClient();
+    const { isAuthenticated, isUnauthenticated, isLoading } = useAuth();
     const showToast = useShowToast();
     return  (
         <div 
@@ -20,6 +20,11 @@ const NotesBranchWise = () => {
                 <h2 className='text-3xl lg:text-5xl font-semibold py-2 pb-4'>Notes</h2>
                 <p>Gets your hands on your study materials now !</p>
             </div>
+            {isLoading && (
+                <div className="flex justify-center items-center mt-8 text-lg">
+                    Checking session...
+                </div>
+            )}
             {isAuthenticated ? (<div className="flex justify-center items-center gap-10">
                 <div className='lg:w-[65vw] mt-8 flex flex-wrap justify-center items-center gap-10 lg:gap-16'>
                     <div className="flex flex-col justify-center items-center">
@@ -86,7 +91,7 @@ const NotesBranchWise = () => {
                     </div>
                 </div>
             </div>) :
-                (
+                isUnauthenticated && (
                     <div className="flex justify-center items-center gap-10">
                         <div className='lg:w-[65vw] mt-8 flex flex-wrap justify-center items-center gap-10 lg:gap-16'>
                             <div className="flex flex-col justify-center items-center">

@@ -3,12 +3,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import useShowToast from '@/hooks/useShowToast';
+import { useAuth } from '@/app/lib/useAuth';
 
 function NavBar() {
   const [navbar, setNavbar] = useState(false);
-  const { user, isAuthenticated } = useKindeBrowserClient();
+  const { isAuthenticated, isUnauthenticated, isLoading } = useAuth();
 
   const showToast = useShowToast();
 
@@ -18,6 +18,10 @@ function NavBar() {
     }
   };
   const handleLinkClickProfile = () => {
+    if (isLoading) {
+      return;
+    }
+
     showToast('Error','Not authenticated Please login/signUp!','error');
     if (navbar) {
       setNavbar(false);
@@ -170,7 +174,7 @@ function NavBar() {
                 <li className={`pb-2 py-2 px-6 text-center border-b-2 md:border-b-0 border-gray-800 md:hover:text-blue-600 ${
                   navbar ? 'text-xl my-4' : 'text-xl'
                 }`}>
-                  {!isAuthenticated && (
+                  {isUnauthenticated && (
                     <LoginLink>
                       <div className="flex items-center justify-center border-[#29b5f6] py-1 px-2 rounded-lg border-[3px] hover:bg-blue-200">
                         SignIn
@@ -185,7 +189,7 @@ function NavBar() {
                     </LogoutLink>
                   )}
                 </li>
-                {!isAuthenticated && (
+                {isUnauthenticated && (
                   <li className={`pb-2 py-2 px-6 text-center border-b-2 md:border-b-0 border-gray-800 md:hover:text-blue-600 ${
                     navbar ? 'text-xl my-4' : 'text-xl'
                   }`}>

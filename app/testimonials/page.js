@@ -10,20 +10,21 @@ import {
 } from "@/app/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import axios from "axios";
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import useShowToast from '@/hooks/useShowToast'
+import { apiUrl } from "@/app/lib/api";
+import { useAuth } from "@/app/lib/useAuth";
 
 const TestimonialCarousel = () => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
 
-  const { isAuthenticated } = useKindeBrowserClient();
+  const { isAuthenticated, isUnauthenticated, isLoading } = useAuth();
   const showToast = useShowToast();
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('https://noteshaala.onrender.com/api/testimonials');
+        const response = await axios.get(apiUrl('/api/testimonials'));
         setUsers(response.data.testimonials);
         // console.log(response);
       } catch (err) {
@@ -81,8 +82,11 @@ const TestimonialCarousel = () => {
         <button className="mt-12 border-white border-[2px] rounded-lg px-7 py-2 text-lg bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]">
           Drop your experience
         </button>
-      </Link>) :
-        (
+      </Link>) : isLoading ? (
+          <button className="mt-12 border-white border-[2px] rounded-lg px-7 py-2 text-lg bg-[#29b5f6d5] opacity-70">
+            Checking session...
+          </button>
+        ) : isUnauthenticated && (
           <div>
             <button onClick={() => showToast('Error','Not Authorised Please Login !','error')} className="mt-12 border-white border-[2px] rounded-lg px-7 py-2 text-lg bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]">
               Drop your experience

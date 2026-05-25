@@ -19,7 +19,13 @@ const NotesSchema = new schema({
     file:{
         type: String,
     },
+    driveFileId:{
+        type: String,
+    },
     fileName:{
+        type: String,
+    },
+    mimeType:{
         type: String,
     },
 },{

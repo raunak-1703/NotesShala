@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion'
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { useAuth } from "@/app/lib/useAuth";
 const variants = {
   initial: {
     y: -200,
@@ -19,7 +19,7 @@ const variants = {
 }
 
 const HeroSection = () => {
-  const { user, isAuthenticated } = useKindeBrowserClient();
+  const { user, isAuthenticated, isUnauthenticated, isLoading } = useAuth();
   return (
     <div className="slide-container bg-center" >
       <div  style={{
@@ -50,10 +50,15 @@ const HeroSection = () => {
               <motion.p className='px-5 md:px-0 md:w-3/5 text-center sm:mb-10 mb-1 sm:text-lg' variants={variants}>
               #share_notes #share_knowledge
               </motion.p>
-              {isAuthenticated?
-              (<motion.button className='bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]  sm:w-40 p-2 py-1 sm:py-2 mt-5 rounded-md' variants={variants} >Hello, {user.given_name}</motion.button>):
-              (<motion.button className='bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]  sm:w-40 p-2 py-1 sm:py-2 mt-5 rounded-md' variants={variants} ><RegisterLink>Sign up</RegisterLink></motion.button>)
-              }
+              {isAuthenticated && (
+                <motion.button className='bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]  sm:w-40 p-2 py-1 sm:py-2 mt-5 rounded-md' variants={variants} >Hello, {user?.given_name}</motion.button>
+              )}
+              {isLoading && (
+                <motion.button className='bg-[#29b5f6d5] opacity-70 sm:w-40 p-2 py-1 sm:py-2 mt-5 rounded-md' variants={variants} >Loading...</motion.button>
+              )}
+              {isUnauthenticated && (
+                <motion.button className='bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]  sm:w-40 p-2 py-1 sm:py-2 mt-5 rounded-md' variants={variants} ><RegisterLink>Sign up</RegisterLink></motion.button>
+              )}
              </div>
           </motion.div>
         </div>

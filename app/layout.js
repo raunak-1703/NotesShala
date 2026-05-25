@@ -1,10 +1,7 @@
-import { Inter } from "next/font/google";
 import "./globals.css";
-import { ChakraProvider } from "@chakra-ui/react";
 import NavBar from "./navbar/NavBar";
 import Footer from "./footer/Footer";
-
-const inter = Inter({ subsets: ["latin"] });
+import Providers from "./providers";
 
 export const metadata = {
   title: "Noteshaala",
@@ -15,12 +12,12 @@ export default function RootLayout({ children }) {
   return (
 
     <html lang="en">
-      <body className={`${inter.className} bg-slate-100`}>
-        <ChakraProvider>
+      <body className="bg-slate-100">
+        <Providers>
           <NavBar/>
             {children}
           <Footer/>
-        </ChakraProvider>
+        </Providers>
       </body>
     </html>
   );

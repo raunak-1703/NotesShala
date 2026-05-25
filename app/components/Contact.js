@@ -3,14 +3,13 @@ import React, { useState } from 'react'
 import Link from 'next/link';
 import { HiOutlineMail, HiOutlinePhone } from 'react-icons/hi';
 import useShowToast from '@/hooks/useShowToast'
-import {useKindeBrowserClient} from '@kinde-oss/kinde-auth-nextjs'
-import toast from 'react-hot-toast'
+import { useAuth } from '@/app/lib/useAuth'
 
 const Contact = () => {
     const [name, setName] = useState('')
     const [message, setMessage] = useState('')
 
-    const {isAuthenticated} = useKindeBrowserClient();
+    const {isAuthenticated, isUnauthenticated, isLoading} = useAuth();
     const showToast = useShowToast(); 
 
     // const handleclick = () => {
@@ -35,7 +34,7 @@ const Contact = () => {
         formData.append("name",name)
         formData.append("message",message)
     
-        formData.append("access_key", "52d56baf-e962-4370-9dd1-bf3c3dcb66a6");
+        formData.append("access_key", process.env.NEXT_PUBLIC_WEB3FORMS_KEY);
     
         const response = await fetch("https://api.web3forms.com/submit", {
           method: "POST",
@@ -70,8 +69,8 @@ const Contact = () => {
                         <span>Phone: +91 7004632130</span>
                     </div>
                     <div className="flex items-center mt-2 md:ml-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
 </svg>
                         <span className='hover:underline hover:cursor-pointer hover:text-[gray]'><Link href="/members">Designed and Developed by &rarr;
                         </Link> </span>
@@ -96,7 +95,10 @@ const Contact = () => {
                         <div className='flex justify-center items-center'>
                             {isAuthenticated ? (<div onClick={handleSubmit} className='border cursor-pointer w-32 border-blue-500 rounded-lg bg-light-blue p-2 text-center hover:scale-[1.02]'>
                                 Submit
-                            </div>) : (
+                            </div>) : isLoading ? (
+                            <div className='border w-32 border-blue-500 rounded-lg bg-light-blue p-2 text-center opacity-70'>
+                                Checking...
+                            </div>) : isUnauthenticated && (
                             <div onClick={() => showToast('Error','Not Authorised Please Login !','error')} className='border cursor-pointer w-32 border-blue-500 rounded-lg bg-light-blue p-2 text-center hover:scale-[1.02]'>
                                 Submit
                             </div>)}

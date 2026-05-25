@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ThreeDots } from "react-loader-spinner"
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { apiUrl } from '@/app/lib/api';
 
 const Page = () => {
   const sem = useParams();
@@ -22,37 +23,23 @@ const Page = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`https://noteshaala.onrender.com/api/notes/${branch}/${semester}`)
+        const res = await fetch(apiUrl(`/api/notes/${encodeURIComponent(branch)}/${encodeURIComponent(semester)}`))
 
         const data = await res.json();
 
         // console.log(data)
-        if (data.error) {
+        if (!res.ok || data.error || !Array.isArray(data)) {
           showToast('Error', data.error, 'error')
+          setNotes([]);
           return;
         }
-        setNotes(data);
-        const n = data;
 
-        const arr = [n];
-
-        for (let i = 0; i < n.length; i++) {
-          arr[i] = data[i].subject;
-        }
-
-        // console.log(data)
-        const uniqueSet = new Set(arr);
-
-        const uniqueArray = Array.from(uniqueSet);
-
-        // console.log(uniqueArray);
-        if(data.length > 0){
-          setNotes(uniqueArray);
-        }
+        const uniqueArray = Array.from(new Set(data.map((item) => item.subject).filter(Boolean)));
+        setNotes(uniqueArray);
 
       }
       catch (error) {
-        showToast('Error', error, 'error')
+        showToast('Error', error.message, 'error')
       }
       finally{
         setLoading(false);
@@ -60,7 +47,7 @@ const Page = () => {
     }
 
     fetchData();
-  }, [])
+  }, [branch, semester, showToast])
 
   return (
     <div className="flex flex-wrap justify-center items-center lg:mt-20 mt-24 mb-10 gap-10 min-h-[80vh]">

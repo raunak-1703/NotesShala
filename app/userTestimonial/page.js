@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { apiUrl } from "@/app/lib/api";
+import { useAuth } from "@/app/lib/useAuth";
 
 const UserTestimonial = () => {
-  const { user } = useKindeBrowserClient();
+  const { user } = useAuth();
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -27,7 +28,7 @@ const UserTestimonial = () => {
     console.log("Picture: ", picture);
 
     try {
-      const res = await fetch("https://noteshaala.onrender.com/api/testimonials", {
+      const res = await fetch(apiUrl('/api/testimonials'), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

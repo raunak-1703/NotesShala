@@ -1,21 +1,22 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Sub from './subject.json'
 import Branch from './branch.json'
 import axios from 'axios'
-import { useToast } from '@chakra-ui/react'
 import useShowToast from '@/hooks/useShowToast'
 import { Button, Stack } from '@chakra-ui/react'
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { apiUrl } from '@/app/lib/api';
+import { useAuth } from '@/app/lib/useAuth';
 
 const Page = () => {
+    const fileSizeLimitMb = 500;
     const [subject, setSubject] = useState('')
     const [branch, setBranch] = useState('')
     const [sem, setSem] = useState('1')
     const [file, setFile] = useState('')
-    const fileSizeLimit = 40 * 1024 * 1024;
+    const fileSizeLimit = fileSizeLimitMb * 1024 * 1024;
 
-    const { user } = useKindeBrowserClient();
+    const { user, isLoading } = useAuth();
     const postedBy = user?.email;
 
     const showToast = useShowToast();
@@ -31,22 +32,30 @@ const Page = () => {
             // console.log("no allowed")
             showToast('Error', "file must be .pdf, .jpg, .jpeg, or .png", 'error')
             e.target.value = '';
+            setFile('');
+            return false;
         }
 
+        return true;
     }
 
     const handleFile = (e) => {
         const pdf = e.target.files[0];
 
-        fileExtensionFunctionCheck(pdf, e, showToast);
+        if (!pdf) {
+            return;
+        }
 
-        if (pdf) {
-            if (pdf.size > fileSizeLimit) {
-                showToast('Error', "File size exceeds the limit of 40 MB.", 'error')
-                e.target.value = '';
-            } else {
-                setFile(pdf);
-            }
+        if (!fileExtensionFunctionCheck(pdf, e, showToast)) {
+            return;
+        }
+
+        if (pdf.size > fileSizeLimit) {
+            showToast('Error', `File size exceeds the limit of ${fileSizeLimitMb} MB.`, 'error')
+            e.target.value = '';
+            setFile('');
+        } else {
+            setFile(pdf);
         }
     }
 
@@ -55,7 +64,11 @@ const Page = () => {
         setloading(true)
         try {
             if (!file || !branch || !sem || !subject) {
-                showToast("Error", "All feild must be filled", 'error')
+                showToast("Error", "All field must be filled", 'error')
+                return;
+            }
+            if (isLoading || !postedBy) {
+                showToast("Error", "Please wait for login session to load", 'error')
                 return;
             }
             const formdata = new FormData();
@@ -65,13 +78,13 @@ const Page = () => {
             formdata.append("subject", subject)
             formdata.append("file", file)
 
-            const res = await axios.post(`https://noteshaala.onrender.com/api/notes/upload`, formdata, {
+            const res = await axios.post(apiUrl('/api/notes/upload'), formdata, {
                 headers: { "Content-Type": "multipart/form-data" }
             })
 
             // console.log(res.data);
-            if (res.error) {
-                showToast('Error', data.error, 'error')
+            if (res.data?.error) {
+                showToast('Error', res.data.error, 'error')
                 return
             }
 
@@ -83,7 +96,7 @@ const Page = () => {
             // setFile('')
         }
         catch (error) {
-            showToast('Error', error.response.data.message, 'error')
+            showToast('Error', error.response?.data?.message || error.message, 'error')
         }
         finally {
             setloading(false)
@@ -200,7 +213,7 @@ const Page = () => {
                         Please choose the branch and subject which is suggested below while typing.
                     </li>
                     <li className=' text-gray-900 '>
-                        The size limit of pdf file to be uploaded is 40mb.
+                        The maximum file size is {fileSizeLimitMb} MB.
                     </li>
                     <li className=' text-gray-900 '>
                         Please compress the long size pdf file before uploading.

@@ -1,11 +1,11 @@
 "use client"
 import Link from 'next/link'
 import React from 'react'
-import {useKindeBrowserClient} from '@kinde-oss/kinde-auth-nextjs'
 import useShowToast from '@/hooks/useShowToast'
+import { useAuth } from '@/app/lib/useAuth'
 
 const ShareNotes = () => {
-    const {isAuthenticated} = useKindeBrowserClient();
+    const {isAuthenticated, isUnauthenticated, isLoading} = useAuth();
     const showToast = useShowToast();
     return (
         <div className='flex flex-col bg-slate-50 justify-center items-center gap-5 text-center pb-14 pt-10'>
@@ -15,7 +15,14 @@ const ShareNotes = () => {
                 <div className='border-white border-[2px] rounded-lg px-7 py-2 text-lg bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]'>Upload Notes</div>
             </Link>)}
             {
-                !isAuthenticated && (
+                isLoading && (
+                    <div className='border-white border-[2px] rounded-lg px-7 py-2 text-lg bg-[#29b5f6d5] opacity-70'>
+                        Checking session...
+                    </div>
+                )
+            }
+            {
+                isUnauthenticated && (
                     <div 
                     onClick={() => showToast('Error', 'Please login/register to upload notes', 'error')} 
                     className='border-white border-[2px] cursor-pointer rounded-lg px-7 py-2 text-lg bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]'

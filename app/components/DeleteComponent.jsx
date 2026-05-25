@@ -1,6 +1,7 @@
 import useShowToast from '@/hooks/useShowToast';
 import React from 'react'
 import { MdDelete } from "react-icons/md";
+import { apiUrl } from '@/app/lib/api';
 
 const DeleteComponent = ({ id }) => {
 
@@ -11,7 +12,7 @@ const DeleteComponent = ({ id }) => {
       e.preventDefault();
       if (!window.confirm('Are you sure want to delete this file?')) return;
 
-      const res = await fetch(`https://noteshaala.onrender.com/api/notes/delete/${id}`, {
+      const res = await fetch(apiUrl(`/api/notes/delete/${id}`), {
         method: 'DELETE',
       })
       const data = await res.json();
