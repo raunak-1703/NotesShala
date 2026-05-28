@@ -82,4 +82,31 @@ const uploadAvatar = async (req, res) => {
     }
 };
 
-module.exports = { getProfile, updateProfile, uploadAvatar };
+const syncProfile = async (req, res) => {
+    try {
+        const { email, name, avatar } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ message: 'Email is required' });
+        }
+
+        const registrationNumber = email.split('@')[0];
+
+        const profile = await Profile.findOneAndUpdate(
+            { email: email.toLowerCase() },
+            { 
+                $setOnInsert: { email, name, avatar },
+                $set: { registrationNumber } 
+            },
+            { new: true, upsert: true, runValidators: true }
+        );
+
+        res.status(200).json(profile);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+        console.log('Error in syncProfile', error.message);
+    }
+};
+
+module.exports = { getProfile, updateProfile, uploadAvatar, syncProfile };

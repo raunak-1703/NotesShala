@@ -31,6 +31,8 @@ app.use(express.urlencoded({extended: false, limit: '500mb'}));
 app.use(cookieParser());
 
 //Routes
+const AuthRouter = require('./routes/AuthRoutes');
+app.use('/api/auth', AuthRouter);
 app.use('/api/notes', NotesRouter);
 app.use('/api/testimonials', TestimonialRouter);
 app.use('/api/profiles', ProfileRouter);

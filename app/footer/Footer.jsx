@@ -40,14 +40,6 @@ const Footer = () => {
         <p className="font-label-sm text-label-sm text-on-surface-variant">
           Copyright © {currentYear}, NoteShaala. All Rights Reserved.
         </p>
-        <div className="flex gap-4">
-          <Link className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary transition-all" href="#">
-            <span className="material-symbols-outlined text-[20px]">share</span>
-          </Link>
-          <Link className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary transition-all" href="#">
-            <span className="material-symbols-outlined text-[20px]">public</span>
-          </Link>
-        </div>
       </div>
     </footer>
   );

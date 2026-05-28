@@ -1,13 +1,19 @@
 "use client";
 
-import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
+import { useSession, signOut } from "next-auth/react";
 
 export const useAuth = () => {
-  const auth = useKindeAuth();
+  const { data: session, status } = useSession();
+
+  const isLoading = status === "loading";
+  const isAuthenticated = status === "authenticated";
 
   return {
-    ...auth,
-    isAuthenticated: !auth.isLoading && auth.isAuthenticated,
-    isUnauthenticated: !auth.isLoading && !auth.isAuthenticated,
+    user: session?.user,
+    token: session?.accessToken,
+    isLoading,
+    isAuthenticated,
+    isUnauthenticated: status === "unauthenticated",
+    logout: () => signOut({ callbackUrl: '/' })
   };
 };

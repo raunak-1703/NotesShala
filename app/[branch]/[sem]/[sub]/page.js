@@ -182,12 +182,15 @@ const Page = () => {
                         <img 
                           src={note.uploaderAvatar || '/user.svg'} 
                           alt={note.uploaderName || 'User'} 
-                          className="w-6 h-6 rounded-full object-cover border border-[#bdc8d1]/50" 
+                          className="w-8 h-8 rounded-full object-cover border border-[#bdc8d1]/50" 
                           onError={(e) => { e.target.src = '/user.svg'; }}
                         />
-                        <p className="text-xs text-[#576065] font-semibold truncate">
-                          Uploaded by: <span className="text-on-surface font-bold">{note.uploaderName || note.postedBy?.split('@')[0]}</span>
-                        </p>
+                        <div className="text-xs text-[#576065] font-semibold truncate flex flex-col justify-center">
+                          <p>Uploaded by: <span className="text-on-surface font-bold">{note.uploaderName || note.postedBy?.split('@')[0]}</span></p>
+                          {note.uploaderRegistrationNumber && (
+                            <p className="text-[#00658d] mt-0.5 uppercase tracking-wider">{note.uploaderRegistrationNumber}</p>
+                          )}
+                        </div>
                       </div>
 
                       {/* Tag list */}

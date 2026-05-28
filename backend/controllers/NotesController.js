@@ -89,7 +89,8 @@ const enrichNotesWithUploaderInfo = async (notes) => {
         return {
             ...note.toObject(),
             uploaderName: profile?.name || note.postedBy.split('@')[0],
-            uploaderAvatar: profile?.avatar || '/user.svg'
+            uploaderAvatar: profile?.avatar || '/user.svg',
+            uploaderRegistrationNumber: profile?.registrationNumber || note.postedBy.split('@')[0].toUpperCase()
         };
     }));
 };

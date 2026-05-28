@@ -1,12 +1,12 @@
 "use client";
 
 import { ChakraProvider } from "@chakra-ui/react";
-import { KindeProvider } from "@kinde-oss/kinde-auth-nextjs";
+import { SessionProvider } from "next-auth/react";
 
 export default function Providers({ children }) {
   return (
-    <KindeProvider>
+    <SessionProvider>
       <ChakraProvider>{children}</ChakraProvider>
-    </KindeProvider>
+    </SessionProvider>
   );
 }

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import Link from 'next/link';
 import { useAuth } from "@/app/lib/useAuth";
 import { apiUrl } from "@/app/lib/api";
 
@@ -84,15 +84,6 @@ const HeroSection = () => {
             className="flex flex-wrap gap-4 pt-2"
             variants={itemVariants}
           >
-            {isAuthenticated && (
-              <a 
-                href="#notes" 
-                className="bg-[#00658d] text-white px-8 py-3 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-[#00658d]/95 transition-all shadow-lg shadow-[#00658d]/20 active:scale-95"
-              >
-                <span className="material-symbols-outlined text-[20px]">search</span>
-                Browse Notes
-              </a>
-            )}
             {isLoading && (
               <button 
                 className="bg-[#00658d] text-white px-8 py-3 rounded-lg font-label-md text-label-md opacity-70 flex items-center gap-2 cursor-wait"
@@ -101,11 +92,12 @@ const HeroSection = () => {
                 Checking session...
               </button>
             )}
-            {isUnauthenticated && (
-              <RegisterLink className="bg-[#00658d] text-white px-8 py-3 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-[#00658d]/95 transition-all shadow-lg shadow-[#00658d]/20 active:scale-95">
-                <span className="material-symbols-outlined text-[20px]">person_add</span>
-                Sign Up
-              </RegisterLink>
+            
+            {!isLoading && (
+              <Link href={isUnauthenticated ? "/signup" : "/#notes"} className="flex gap-1 items-center bg-[#00adef] hover:bg-[#00658d] shadow-md shadow-[#c6e7ff]/50 px-6 py-3 md:px-8 md:py-4 rounded-xl text-white font-label-md text-label-md transition-all active:scale-95 border border-[#83cfff]/30 whitespace-nowrap">
+                {isUnauthenticated ? 'Get Started' : 'Explore Notes'}
+                <span className="material-symbols-outlined">arrow_forward</span>
+              </Link>
             )}
 
             <a 
@@ -122,6 +114,8 @@ const HeroSection = () => {
             <motion.div 
               className="flex gap-10 pt-6 border-t border-[#bdc8d1]/40 w-full"
               variants={itemVariants}
+              initial="initial"
+              animate="animate"
             >
               <div>
                 <div className="font-headline-md text-headline-md font-bold text-[#00658d]">

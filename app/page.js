@@ -15,12 +15,12 @@ export default function Home() {
       <div>
         <About/>
       </div>
+      <div id="reviews">
+        <TestimonialCarousel />
+      </div>
       <AuthOnly>
         <div id="notes">
           <NotesBranchWise />
-        </div>
-        <div id="reviews">
-          <TestimonialCarousel />
         </div>
         <div id="uploads">
           <ShareNotes />

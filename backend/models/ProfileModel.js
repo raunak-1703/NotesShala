@@ -14,6 +14,14 @@ const ProfileSchema = new mongoose.Schema({
     avatar: {
         type: String,
     },
+    password: {
+        type: String,
+        select: false,
+    },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
     branch: {
         type: String,
     },
@@ -22,6 +30,11 @@ const ProfileSchema = new mongoose.Schema({
     },
     semester: {
         type: String,
+    },
+    registrationNumber: {
+        type: String,
+        uppercase: true,
+        trim: true,
     },
 }, {
     timestamps: true,
