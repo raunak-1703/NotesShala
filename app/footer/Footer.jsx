@@ -36,10 +36,6 @@ const Footer = () => {
         </Link>
       </nav>
 
-      <p className="font-body-md text-body-md text-on-surface-variant max-w-xl mb-4 z-10">
-        The ultimate academic resource hub for students. Streamlining the way you study, one note at a time.
-      </p>
-
       <div className="w-full border-t border-outline-variant pt-6 flex flex-col md:flex-row justify-between items-center gap-4 max-w-[1280px] z-10">
         <p className="font-label-sm text-label-sm text-on-surface-variant">
           Copyright © {currentYear}, NoteShaala. All Rights Reserved.

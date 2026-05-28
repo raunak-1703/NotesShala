@@ -16,11 +16,7 @@ const AuthOnly = ({ children }) => {
     return (
       <section className="mx-auto max-w-6xl px-4 py-16">
         <div className="rounded-lg border border-[#c0c7cf] bg-white p-8 text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-[#18638b]">Members only</p>
           <h2 className="mt-3 font-serif text-3xl font-semibold text-[#1b1c1c]">Sign in to unlock Noteshaala</h2>
-          <p className="mx-auto mt-3 max-w-xl text-[#40484e]">
-            Notes, uploads, reviews, and your profile are available after authentication.
-          </p>
           <RegisterLink>
             <span className="mt-6 inline-flex rounded-lg bg-[#18638b] px-5 py-3 font-semibold text-white hover:bg-[#004c6e]">
               Login or create account
