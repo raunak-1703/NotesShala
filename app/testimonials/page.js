@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
@@ -26,7 +27,6 @@ const TestimonialCarousel = () => {
       try {
         const response = await axios.get(apiUrl('/api/testimonials'));
         setUsers(response.data.testimonials);
-        // console.log(response);
       } catch (err) {
         console.error(err);
         setError('Failed to fetch testimonials.');
@@ -36,64 +36,106 @@ const TestimonialCarousel = () => {
     fetchUsers();
   }, []);
 
-
-
   return (
-    <main className="flex mb-10 flex-col items-center mt-12 overflow-x-hidden">
-      <h1 className="mb-8 text-3xl px-2 text-center font-bold">OUR HAPPY STUDENTS</h1>
+    <section className="bg-surface-bright py-16 md:py-24 border-t border-b border-outline-variant overflow-hidden text-[#191c1e]">
+      <div className="max-w-[1280px] mx-auto px-8">
+        
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h2 className="font-headline-xl text-headline-xl italic font-bold tracking-tight">
+            OUR HAPPY STUDENTS
+          </h2>
+          <div className="w-24 h-1 bg-[#00adef] mx-auto mt-4 rounded-full"></div>
+        </div>
 
-      {error && <div className="text-red-500">{error}</div>}
-
-      <Carousel
-        plugins={[Autoplay({ delay: 1500 })]}
-        opts={{
-          align: "start",
-        }}
-        className="w-[70%]"
-      >
-        <CarouselContent>
-          {Array.isArray(users) && users.map((data, index) => (
-
-            <CarouselItem key={index} className="sm:basis-1/1 md:basis-1/3 lg:basis-1/4">
-
-              <div className=" w-[100%] h-[50vh] rounded-[0.8rem] scale-95 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] border-gray-200 border-[2px] shadow-md transition-all duration-300 hover:scale-100">
-                <div className="flex w-[96%] flex-col h-[48vh] m-auto mt-1 rounded-[0.8rem] items-center justify-center border-white p-3 border-[2px]">
-                  <span className="border-[2px] border-gray-200 p-1 rounded-full">
-                    <img
-                      className="aspect-square rounded-full w-[8rem] border-[2px] "
-                      src={data?.picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"}
-                      alt="picture"
-                    />
-                  </span>
-                  <span className="text-xl  p-2 text-black">{data?.fullname}</span>
-                  <span className="text-lg text-center p-4 text-gray-800">"{data?.message}"</span>
-                </div>
-              </div>
-            </CarouselItem>
-
-          ))}
-        </CarouselContent>
-
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
-
-      {isAuthenticated ? (<Link href="/userTestimonial">
-        <button className="mt-12 border-white border-[2px] rounded-lg px-7 py-2 text-lg bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]">
-          Drop your experience
-        </button>
-      </Link>) : isLoading ? (
-          <button className="mt-12 border-white border-[2px] rounded-lg px-7 py-2 text-lg bg-[#29b5f6d5] opacity-70">
-            Checking session...
-          </button>
-        ) : isUnauthenticated && (
-          <div>
-            <button onClick={() => showToast('Error','Not Authorised Please Login !','error')} className="mt-12 border-white border-[2px] rounded-lg px-7 py-2 text-lg bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]">
-              Drop your experience
-            </button>
+        {error && (
+          <div className="text-red-500 text-center font-label-md text-label-md py-4">
+            {error}
           </div>
         )}
-    </main>
+
+        {/* Carousel Container */}
+        <div className="relative group px-4">
+          <Carousel
+            plugins={[Autoplay({ delay: 2500 })]}
+            opts={{
+              align: "start",
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4">
+              {Array.isArray(users) && users.map((data, index) => (
+                <CarouselItem key={index} className="pl-4 sm:basis-1/1 md:basis-1/2 lg:basis-1/3">
+                  <div className="bg-white p-8 rounded-2xl border border-outline-variant shadow-[0_4px_20px_rgba(0,173,239,0.06)] h-[320px] flex flex-col justify-between hover:scale-[1.01] transition-all duration-300">
+                    
+                    {/* Student Info Header */}
+                    <div className="flex items-center gap-4 mb-4">
+                      <img
+                        className="w-12 h-12 rounded-full border-2 border-transparent object-cover bg-[#f2f4f6]"
+                        src={data?.picture || "/user.svg"}
+                        alt="Student profile"
+                        onError={(e) => { e.target.src = '/user.svg'; }}
+                      />
+                      <div className="min-w-0 flex-grow">
+                        <h4 className="font-label-lg text-label-lg font-bold text-[#191c1e] truncate">
+                          {data?.fullname}
+                        </h4>
+                        <p className="font-body-sm text-body-sm text-[#576065] mt-0.5">
+                          Verified Student
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Stars */}
+                    <div className="flex text-[#00658d] select-none mb-4 gap-0.5">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span key={star} className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      ))}
+                    </div>
+
+                    {/* Testimonial Quote */}
+                    <div className="overflow-y-auto no-scrollbar flex-grow">
+                      <p className="text-[#576065] font-body-lg text-[16px] italic leading-relaxed">
+                        "{data?.message}"
+                      </p>
+                    </div>
+
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+
+            <CarouselPrevious className="absolute left-[-16px] md:left-[-32px] top-1/2 -translate-y-1/2 z-20 bg-white border border-[#bdc8d1] shadow-md hover:bg-[#c6e7ff]/30 text-primary w-11 h-11" />
+            <CarouselNext className="absolute right-[-16px] md:right-[-32px] top-1/2 -translate-y-1/2 z-20 bg-white border border-[#bdc8d1] shadow-md hover:bg-[#c6e7ff]/30 text-primary w-11 h-11" />
+          </Carousel>
+        </div>
+
+        {/* CTA Drop Experience Button */}
+        <div className="text-center mt-12">
+          {isAuthenticated ? (
+            <Link href="/userTestimonial">
+              <button className="inline-flex items-center gap-2 bg-[#00adef] text-white px-8 py-3 rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-sm">
+                Drop your experience
+                <span className="material-symbols-outlined text-[18px]">edit</span>
+              </button>
+            </Link>
+          ) : isLoading ? (
+            <button className="inline-flex items-center gap-2 bg-[#00adef] text-white px-8 py-3 rounded-lg font-label-md text-label-md opacity-70 cursor-wait">
+              Checking session...
+            </button>
+          ) : isUnauthenticated && (
+            <button 
+              onClick={() => showToast('Error', 'Not Authorized, Please Login!', 'error')} 
+              className="inline-flex items-center gap-2 bg-[#00adef] text-white px-8 py-3 rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-sm"
+            >
+              Drop your experience
+              <span className="material-symbols-outlined text-[18px]">edit</span>
+            </button>
+          )}
+        </div>
+
+      </div>
+    </section>
   );
 };
 

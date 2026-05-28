@@ -1,72 +1,175 @@
 "use client"
+
 import React from 'react';
-import { motion } from 'framer-motion'
+import { motion } from 'framer-motion';
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { useAuth } from "@/app/lib/useAuth";
-const variants = {
-  initial: {
-    y: -200,
-    opacity: 0,
+import { apiUrl } from "@/app/lib/api";
+
+const containerVariants = {
+  initial: { opacity: 0 },
+  animate: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+    },
   },
+};
+
+const itemVariants = {
+  initial: { y: 30, opacity: 0 },
   animate: {
     y: 0,
     opacity: 1,
-    transition: {
-      duration: 1,
-      staggerChildren: 0.1,
-    },
+    transition: { duration: 0.8, ease: "easeOut" },
   },
-}
+};
 
 const HeroSection = () => {
-  const { user, isAuthenticated, isUnauthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isUnauthenticated, isLoading } = useAuth();
+  const [stats, setStats] = React.useState({ activeUsers: 0, notesShared: 0 });
+  const [statsLoading, setStatsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch(apiUrl('/api/notes/stats'));
+        if (res.ok) {
+          const data = await res.json();
+          setStats({
+            activeUsers: data.activeUsers || 0,
+            notesShared: data.notesShared || 0
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
   return (
-    <div className="slide-container bg-center" >
-      <div  style={{
-        backgroundImage: "url(/Mobile_Hero.png)",
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundSize: 'cover',
-        backgroundPosition:'center',
-        backgroundRepeat: 'no-repeat',
-        // background: 'linear-gradient(to bottom, rgba(2, 2, 2, 0.633),rgba(2, 2, 2, 0.633))',
-      }} className='h-[130vw] sm:h-[90vh]'>
-         <div className='w-full h-full sm:bg-[url(/Hero.png)] sm:bg-cover sm:bg-center sm:bg-no-repeat flex items-center justify-center'>
-        <div className='flex flex-col justify-start items-center h-full w-full' style={{
-          // background: 'linear-gradient(to bottom, rgba(2, 2, 2, 0.533), rgba(2, 2, 2, 0.533))'
-        }}>
-          <motion.div className='flex text-black items-center justify-center pt-28 md:pt-36'
-            variants={variants}
-            initial='initial'
-            whileInView='animate'
+    <section className="relative min-h-[85vh] flex items-center pt-20 pb-16 overflow-hidden academic-pattern bg-[#fcf9f8]">
+      <div className="max-w-[1280px] mx-auto w-full px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        {/* Left text column */}
+        <motion.div 
+          className="space-y-6 z-10 flex flex-col items-start justify-center text-[#191c1e]"
+          variants={containerVariants}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+        >
+          {/* Badge */}
+          <motion.div 
+            className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#c6e7ff] text-[#001e2e] rounded-full text-label-sm font-label-sm font-semibold shadow-sm select-none"
+            variants={itemVariants}
           >
-            <div className='flex flex-col items-center justify-center '>
-              <motion.h3 className='text-xl sm:text-3xl font-medium' variants={variants}>WELCOME TO NOTESHAALA</motion.h3>
-              <motion.h2 className='text-4xl sm:text-7xl font-semibold my-6 sm:my-10' variants={variants}>GET FREE NOTES</motion.h2>
-              <motion.p className='px-12 md:px-0 md:w-3/5 text-center sm:mb-10 mb-1 sm:text-lg' variants={variants}>
-              Your digital companion for academic excellence. Get ready to revolutionize your study experience!
-              </motion.p>
-              <motion.p className='px-5 md:px-0 md:w-3/5 text-center sm:mb-10 mb-1 sm:text-lg' variants={variants}>
-              #share_notes #share_knowledge
-              </motion.p>
-              {isAuthenticated && (
-                <motion.button className='bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]  sm:w-40 p-2 py-1 sm:py-2 mt-5 rounded-md' variants={variants} >Hello, {user?.given_name}</motion.button>
-              )}
-              {isLoading && (
-                <motion.button className='bg-[#29b5f6d5] opacity-70 sm:w-40 p-2 py-1 sm:py-2 mt-5 rounded-md' variants={variants} >Loading...</motion.button>
-              )}
-              {isUnauthenticated && (
-                <motion.button className='bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]  sm:w-40 p-2 py-1 sm:py-2 mt-5 rounded-md' variants={variants} ><RegisterLink>Sign up</RegisterLink></motion.button>
-              )}
-             </div>
+            <span className="material-symbols-outlined text-[18px]">verified</span>
+            WELCOME TO NOTESHAALA
           </motion.div>
-        </div>
-        </div>
+
+
+          {/* Subtext */}
+          <motion.p 
+            className="text-body-lg text-[#3e4850] max-w-lg leading-relaxed"
+            variants={itemVariants}
+          >
+            Your digital companion for academic excellence. Access premium resources, share knowledge, and revolutionize your study experience today.
+          </motion.p>
+
+          {/* Buttons */}
+          <motion.div 
+            className="flex flex-wrap gap-4 pt-2"
+            variants={itemVariants}
+          >
+            {isAuthenticated && (
+              <a 
+                href="#notes" 
+                className="bg-[#00658d] text-white px-8 py-3 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-[#00658d]/95 transition-all shadow-lg shadow-[#00658d]/20 active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[20px]">search</span>
+                Browse Notes
+              </a>
+            )}
+            {isLoading && (
+              <button 
+                className="bg-[#00658d] text-white px-8 py-3 rounded-lg font-label-md text-label-md opacity-70 flex items-center gap-2 cursor-wait"
+                disabled
+              >
+                Checking session...
+              </button>
+            )}
+            {isUnauthenticated && (
+              <RegisterLink className="bg-[#00658d] text-white px-8 py-3 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-[#00658d]/95 transition-all shadow-lg shadow-[#00658d]/20 active:scale-95">
+                <span className="material-symbols-outlined text-[20px]">person_add</span>
+                Sign Up
+              </RegisterLink>
+            )}
+
+            <a 
+              href="#contacts" 
+              className="border border-[#00658d] text-[#00658d] px-8 py-3 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-[#c6e7ff]/30 transition-all active:scale-95"
+            >
+              <span className="material-symbols-outlined text-[20px]">mail</span>
+              Contact Team
+            </a>
+          </motion.div>
+
+          {/* Stats strip */}
+          {!statsLoading && (stats.activeUsers > 0 || stats.notesShared > 0) && (
+            <motion.div 
+              className="flex gap-10 pt-6 border-t border-[#bdc8d1]/40 w-full"
+              variants={itemVariants}
+            >
+              <div>
+                <div className="font-headline-md text-headline-md font-bold text-[#00658d]">
+                  {stats.activeUsers}
+                </div>
+                <div className="text-label-sm text-[#576065] uppercase tracking-wider font-semibold">Active Users</div>
+              </div>
+              <div>
+                <div className="font-headline-md text-headline-md font-bold text-[#00658d]">
+                  {stats.notesShared}
+                </div>
+                <div className="text-label-sm text-[#576065] uppercase tracking-wider font-semibold">Notes Shared</div>
+              </div>
+            </motion.div>
+          )}
+        </motion.div>
+
+        {/* Right graphic column */}
+        <motion.div 
+          className="relative flex justify-center lg:justify-end"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <div className="relative w-full aspect-square max-w-[460px]">
+            {/* Background decorative glow */}
+            <div className="absolute inset-0 bg-[#83cfff]/15 rounded-full blur-3xl"></div>
+            
+            <img 
+              alt="Student studying with notes" 
+              className="relative z-10 w-full h-full object-cover rounded-3xl shadow-xl border-4 border-white" 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV1BwnGp_HmMwEzo5gXVCZHlHgkXds_8E_To8OeqoOBdykasVrvScahhFAH6h6u5TJpWJ7jaGODimQOoWMQcEkP5frmlBmDBssn9e6BerOOm7TkbDpR-dVGsT3VFLjiJJi0eCDkphADBrBngXMIjY8EAAwIpSYRZZRaZpckCzFLXC2Da6yIxaYzkTbaoaiUh0110K1WV44poqkzmuyhrWo2frrPR2BzMcYl_fcKlw8Z6Zt1eKKb6YquEJUg80gVZWlnqfqo7gd01uD"
+            />
+          </div>
+        </motion.div>
       </div>
 
-    </div>
-  )
+      {/* Dotted Anchor Decorative Elements */}
+      <div className="absolute bottom-0 left-0 w-full opacity-10 pointer-events-none overflow-hidden h-24 flex items-end select-none">
+        <div className="flex gap-10 text-[#00658d] px-8">
+          <span className="material-symbols-outlined text-[80px]">book_2</span>
+          <span className="material-symbols-outlined text-[70px]">edit_note</span>
+          <span className="material-symbols-outlined text-[90px]">menu_book</span>
+          <span className="material-symbols-outlined text-[80px]">library_books</span>
+        </div>
+      </div>
+    </section>
+  );
 }
 
-export default HeroSection
+export default HeroSection;

@@ -4,6 +4,7 @@ const connectdb = require('./db');
 const cookieParser = require('cookie-parser');
 const NotesRouter = require('./routes/NotesRoutes')
 const TestimonialRouter= require('./routes/TestimonialRoutes')
+const ProfileRouter= require('./routes/ProfileRoutes')
 const cloudinary = require('cloudinary').v2;
 const cors = require('cors')
 
@@ -32,6 +33,7 @@ app.use(cookieParser());
 //Routes
 app.use('/api/notes', NotesRouter);
 app.use('/api/testimonials', TestimonialRouter);
+app.use('/api/profiles', ProfileRouter);
 
 //server listening
 app.listen(PORT, () => {

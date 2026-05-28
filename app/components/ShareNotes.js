@@ -1,39 +1,61 @@
 "use client"
+
 import Link from 'next/link'
 import React from 'react'
 import useShowToast from '@/hooks/useShowToast'
 import { useAuth } from '@/app/lib/useAuth'
 
 const ShareNotes = () => {
-    const {isAuthenticated, isUnauthenticated, isLoading} = useAuth();
+    const { isAuthenticated, isUnauthenticated, isLoading } = useAuth();
     const showToast = useShowToast();
+
     return (
-        <div className='flex flex-col bg-slate-50 justify-center items-center gap-5 text-center pb-14 pt-10'>
-            <h2 className='text-3xl lg:text-4xl font-semibold'>SHARE YOUR NOTES</h2>
-            <p className='lg:text-xl lg:my-5 px-2'>Help your fellow mates with by sharing your valuable notes</p>
-            {isAuthenticated && (<Link href='/uploadnotes'>
-                <div className='border-white border-[2px] rounded-lg px-7 py-2 text-lg bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]'>Upload Notes</div>
-            </Link>)}
-            {
-                isLoading && (
-                    <div className='border-white border-[2px] rounded-lg px-7 py-2 text-lg bg-[#29b5f6d5] opacity-70'>
-                        Checking session...
-                    </div>
-                )
-            }
-            {
-                isUnauthenticated && (
-                    <div 
-                    onClick={() => showToast('Error', 'Please login/register to upload notes', 'error')} 
-                    className='border-white border-[2px] cursor-pointer rounded-lg px-7 py-2 text-lg bg-[#29b5f6d5] hover:bg-[#29b5f686] hover:scale-[1.02]'
-                    >
-                        Upload Notes
-                    </div>
-                )
-            }
-            <p className='lg:text-xl lg:my-5'>We thank you on behalf of entire batch</p>
-        </div>
+        <section className="max-w-[1280px] mx-auto px-8 pb-16 pt-10">
+            <div className="bg-[#00658d] text-white rounded-[2.5rem] p-12 md:p-16 text-center relative overflow-hidden shadow-lg select-none">
+                
+                {/* Content Overlay */}
+                <div className="relative z-10 max-w-2xl mx-auto space-y-6">
+                    <h2 className="font-headline-xl text-headline-xl italic font-bold">
+                        SHARE YOUR NOTES
+                    </h2>
+                    
+                    <p className="text-body-lg opacity-90 leading-relaxed">
+                        Help your fellow mates by sharing your valuable notes. Every document counts, and we thank you on behalf of the entire batch!
+                    </p>
+
+                    {isAuthenticated && (
+                        <Link href="/uploadnotes" className="inline-flex">
+                            <button className="bg-[#00adef] text-white px-10 py-4 rounded-xl font-label-md text-label-md hover:bg-opacity-95 hover:scale-105 active:scale-95 transition-all shadow-md">
+                                Upload Notes Now
+                            </button>
+                        </Link>
+                    )}
+                    {isLoading && (
+                        <button className="bg-[#00adef] text-white px-10 py-4 rounded-xl font-label-md text-label-md opacity-70 cursor-wait">
+                            Checking session...
+                        </button>
+                    )}
+                    {isUnauthenticated && (
+                        <button 
+                            onClick={() => showToast('Error', 'Please login/register to upload notes', 'error')} 
+                            className="bg-[#00adef] text-white px-10 py-4 rounded-xl font-label-md text-label-md hover:scale-105 active:scale-95 transition-all shadow-md"
+                        >
+                            Upload Notes Now
+                        </button>
+                    )}
+                </div>
+
+                {/* Decorative background icons */}
+                <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none select-none">
+                    <span className="material-symbols-outlined text-[160px]">upload</span>
+                </div>
+                <div className="absolute bottom-0 left-0 p-8 opacity-10 pointer-events-none select-none">
+                    <span className="material-symbols-outlined text-[160px]">group</span>
+                </div>
+
+            </div>
+        </section>
     )
 }
 
-export default ShareNotes
+export default ShareNotes;

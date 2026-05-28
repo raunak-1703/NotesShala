@@ -1,211 +1,173 @@
 "use client";
-import Image from 'next/image';
+
 import Link from 'next/link';
 import { useState } from 'react';
 import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import useShowToast from '@/hooks/useShowToast';
 import { useAuth } from '@/app/lib/useAuth';
 
 function NavBar() {
   const [navbar, setNavbar] = useState(false);
   const { isAuthenticated, isUnauthenticated, isLoading } = useAuth();
 
-  const showToast = useShowToast();
-
   const handleLinkClick = () => {
-    if (navbar) {
-      setNavbar(false);
-    }
-  };
-  const handleLinkClickProfile = () => {
-    if (isLoading) {
-      return;
-    }
-
-    showToast('Error','Not authenticated Please login/signUp!','error');
-    if (navbar) {
-      setNavbar(false);
-    }
+    setNavbar(false);
   };
 
   return (
-    <div>
-      <nav className="w-full shadow bg-slate-50 fixed top-0 left-0 right-0 z-10 font-etica">
-        <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
-          <div className="flex items-center justify-between py-2 md:py-3 w-full">
-            <div className="md:hidden">
-              <button
-                className="p-2 text-gray-700 rounded-md outline-none focus:border-gray-400 focus:border"
-                onClick={() => setNavbar(!navbar)}
+    <header className="bg-surface/90 sticky top-0 z-50 border-b border-outline-variant backdrop-blur-md shadow-md text-xl sm:text-2xl">
+      <div className="flex justify-between items-center w-full px-4 md:px-8 py-3.5 max-w-[1280px] mx-auto">
+        {/* Brand/Logo */}
+        <Link href="/" className="flex items-center gap-3 select-none" onClick={handleLinkClick}>
+          <div className="w-10 h-10 rounded-full flex items-center justify-center text-on-primary-container shadow-sm">
+            <img src="NoteShaala_Logo.png" alt="logo" className='w-10 h-10' />
+          </div>
+          <span className="font-headline-md text-headline-md font-bold tracking-tight text-on-surface">
+            NOTESHAALA
+          </span>
+        </Link>
+
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center gap-8">
+          {isAuthenticated && (
+            <>
+              <Link 
+                className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-label-md text-label-md flex items-center gap-2" 
+                href="/#notes"
               >
-                {navbar ? (
-                  <img src="/close.svg" className='w-5 md:w-10' alt="close" />
-                ) : (
-                  <img
-                    src="/hamburger-menu.svg"
-                    alt="menu"
-                    className="focus:border-none w-5 md:w-10 active:border-none"
-                  />
-                )}
-              </button>
-            </div>
+                <img src="notes.svg" alt="notes" className='w-5 h-5'/>
+                Notes
+              </Link>
+              <Link 
+                className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-label-md text-label-md flex items-center gap-2" 
+                href="/usernotes"
+              >
+                <img src="user.svg" alt="profile" className='w-5 h-5'/>
+                Profile
+              </Link>
+              <Link 
+                className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-label-md text-label-md flex items-center gap-2" 
+                href="/#reviews"
+              >
+                <img src="smile.svg" alt="reviews" className='w-5 h-5'/>
+                Reviews
+              </Link>
+              <Link 
+                className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-label-md text-label-md flex items-center gap-2" 
+                href="/uploadnotes"
+              >
+                <img src="upload.svg" alt="upload" className='w-5 h-5'/>
+                Upload
+              </Link>
+            </>
+          )}
+          <Link 
+            className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-label-md text-label-md flex items-center gap-2" 
+            href="/#contacts"
+          >
+            <img src="arrows.svg" alt="contact" className='w-5 h-5'/>
+            Contact
+          </Link>
 
-            <Link href="/" className='flex items-center'>
-            <div className='w-12 h-12 sm:w-16 sm:h-16  bg-cover mr-4' style={{backgroundImage: "url(/NoteShaala_Logo.png)"}}></div>
-              <h2 className="lg:text-3xl text-2xl text-black font-bold hidden md:block ">NOTESHAALA</h2>
-            </Link>
-
-            {navbar && (
-              <div className="mr-4 flex items-center md:hidden">
-                <div>
-                  <Image
-                    src="/user.svg"
-                    width={30}
-                    height={30}
-                    alt="User"
-                    className="cursor-pointer"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-          <div>
-            <div
-              className={`flex-1 justify-self-center pb-3 md:block md:pb-0 md:mt-0 ${
-                navbar ? 'px-12 py-4 md:p-0 block' : 'hidden'
-              } ${navbar ? 'text-center justify-center' : ''}`}
-            >
-              <ul className={` md:h-auto items-center ${navbar ? 'justify-center flex-col' : 'md:flex'}`}>
-                <li className={`pb-2 py-2 md:px-6 text-center border-b-2 md:border-b-0  border-gray-800 md:hover:text-blue-600 ${
-                  navbar ? 'text-xl my-4' : 'text-xl'
-                }`}>
-                  {
-                    isAuthenticated ? (
-                    <Link href='/usernotes' onClick={handleLinkClick}>
-                    <div className="flex items-center justify-center">
-                      <Image
-                        src="/user.svg"
-                        width={20}
-                        height={20}
-                        alt="User"
-                        className="cursor-pointer mr-2"
-                      />
-                      Profile
-                    </div>
-                  </Link>) : (
-                    <div onClick={handleLinkClickProfile}>
-                    <div className="flex items-center justify-center">
-                      <Image
-                        src="/user.svg"
-                        width={20}
-                        height={20}
-                        alt="User"
-                        className="cursor-pointer mr-2"
-                      />
-                      Profile
-                    </div>
-                  </div>)
-                  }
-                </li>
-                <li className={`pb-2 py-2 px-6 text-center border-b-2 md:border-b-0  border-gray-800 md:hover:text-blue-600 ${
-                  navbar ? 'text-xl my-4' : 'text-xl'
-                }`}>
-                  <Link href="/#notes" onClick={handleLinkClick}>
-                    <div className="flex items-center justify-center space-x-4">
-                      <Image
-                        src="/notes.svg"
-                        width={20}
-                        height={20}
-                        alt="Note"
-                        className="cursor-pointer mr-2"
-                      />
-                      Notes
-                    </div>
-                  </Link>
-                </li>
-                <li className={`pb-2 py-2 px-6 text-center border-b-2 md:border-b-0  border-gray-800 md:hover:text-blue-600 ${
-                  navbar ? 'text-xl my-4' : 'text-xl'
-                }`}>
-                  <Link href="/#reviews" onClick={handleLinkClick}>
-                    <div className="flex items-center justify-center space-x-4">
-                      <Image
-                        src="/smile.svg"
-                        width={20}
-                        height={20}
-                        alt="Smile"
-                        className="cursor-pointer mr-2"
-                      />
-                      Reviews
-                    </div>
-                  </Link>
-                </li>
-                <li className={`pb-2 py-2 px-6 text-center border-b-2 md:border-b-0  border-gray-800 md:hover:text-blue-600 ${
-                  navbar ? 'text-xl my-4' : 'text-xl'
-                }`}>
-                  <Link href="/#uploads" onClick={handleLinkClick}>
-                    <div className="flex items-center justify-center space-x-4">
-                      <Image
-                        src="/upload.svg"
-                        width={20}
-                        height={20}
-                        alt="Upload"
-                        className="cursor-pointer mr-2"
-                      />
-                      Upload
-                    </div>
-                  </Link>
-                </li>
-                <li className={`pb-2 py-2 px-6 text-center border-b-2 md:border-b-0  border-gray-800 md:hover:text-blue-600 ${
-                  navbar ? 'text-xl my-4' : 'text-xl'
-                }`}>
-                  <Link href="/#contacts" onClick={handleLinkClick}>
-                    <div className="flex items-center justify-center space-x-4">
-                      <Image
-                        src="/arrows.svg"
-                        width={20}
-                        height={20}
-                        alt="Arrow"
-                        className="cursor-pointer mr-2"
-                      />
-                      Contact
-                    </div>
-                  </Link>
-                </li>
-                <li className={`pb-2 py-2 px-6 text-center border-b-2 md:border-b-0 border-gray-800 md:hover:text-blue-600 ${
-                  navbar ? 'text-xl my-4' : 'text-xl'
-                }`}>
-                  {isUnauthenticated && (
-                    <LoginLink>
-                      <div className="flex items-center justify-center border-[#29b5f6] py-1 px-2 rounded-lg border-[3px] hover:bg-blue-200">
-                        SignIn
-                      </div>
-                    </LoginLink>
-                  )}
-                  {isAuthenticated && (
-                    <LogoutLink>
-                      <div className="flex items-center justify-center bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] py-1 px-2 rounded-lg hover:bg-blue-300">
-                        LogOut
-                      </div>
-                    </LogoutLink>
-                  )}
-                </li>
-                {isUnauthenticated && (
-                  <li className={`pb-2 py-2 px-6 text-center border-b-2 md:border-b-0 border-gray-800 md:hover:text-blue-600 ${
-                    navbar ? 'text-xl my-4' : 'text-xl'
-                  }`}>
-                    <RegisterLink>
-                      <div className="flex items-center justify-center bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] py-1 px-2 rounded-lg hover:bg-blue-300">
-                        SignUp
-                      </div>
-                    </RegisterLink>
-                  </li>
-                )}
-              </ul>
+          {/* Desktop Auth Buttons */}
+          {!isLoading && isUnauthenticated && (
+            <div className="flex items-center gap-4">
+              <LoginLink className="text-on-surface-variant hover:text-primary font-label-md text-label-md transition-colors">
+                SignIn
+              </LoginLink>
+              <RegisterLink className="bg-primary text-white px-5 py-2 rounded-lg font-label-md text-label-md hover:bg-primary/95 transition-all shadow-sm">
+                SignUp
+              </RegisterLink>
             </div>
-          </div>
+          )}
+          {!isLoading && isAuthenticated && (
+            <LogoutLink className="bg-primary-container text-on-primary-container px-5 py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all shadow-sm">
+              LogOut
+            </LogoutLink>
+          )}
+          {isLoading && (
+            <div className="w-48 h-10"></div>
+          )}
+        </nav>
+
+        {/* Mobile Menu Toggle */}
+        <div className="flex items-center gap-4 md:hidden">
+
+          <button 
+            className="text-primary p-1 focus:outline-none"
+            onClick={() => setNavbar(!navbar)}
+            aria-label="Toggle menu"
+          >
+            <span className="material-symbols-outlined text-2xl font-bold">
+              {navbar ? 'close' : 'menu'}
+            </span>
+          </button>
         </div>
-      </nav>
-    </div>
+      </div>
+
+      {/* Mobile Nav Menu */}
+      {navbar && (
+        <div className="md:hidden border-t border-outline-variant bg-surface px-6 py-4 flex flex-col gap-4 animate-fadeIn">
+          {isAuthenticated && (
+            <>
+              <Link 
+                className="text-on-surface-variant hover:text-primary transition-colors py-2 font-label-md text-label-md" 
+                href="/#notes" 
+                onClick={handleLinkClick}
+              >
+                Notes
+              </Link>
+              <Link 
+                className="text-on-surface-variant hover:text-primary transition-colors py-2 font-label-md text-label-md" 
+                href="/usernotes" 
+                onClick={handleLinkClick}
+              >
+                Profile
+              </Link>
+              <Link 
+                className="text-on-surface-variant hover:text-primary transition-colors py-2 font-label-md text-label-md" 
+                href="/#reviews" 
+                onClick={handleLinkClick}
+              >
+                Reviews
+              </Link>
+              <Link 
+                className="text-on-surface-variant hover:text-primary transition-colors py-2 font-label-md text-label-md" 
+                href="/uploadnotes" 
+                onClick={handleLinkClick}
+              >
+                Upload
+              </Link>
+            </>
+          )}
+          <Link 
+            className="text-on-surface-variant hover:text-primary transition-colors py-2 font-label-md text-label-md" 
+            href="/#contacts" 
+            onClick={handleLinkClick}
+          >
+            Contact
+          </Link>
+
+          {/* Mobile Auth Buttons */}
+          {!isLoading && isUnauthenticated && (
+            <div className="flex flex-col gap-3 pt-2 border-t border-outline-variant/50">
+              <LoginLink className="text-center text-on-surface-variant hover:text-primary font-label-md text-label-md py-2 transition-colors">
+                SignIn
+              </LoginLink>
+              <RegisterLink className="text-center bg-primary text-white py-2.5 rounded-lg font-label-md text-label-md hover:bg-primary/95 transition-all">
+                SignUp
+              </RegisterLink>
+            </div>
+          )}
+          {!isLoading && isAuthenticated && (
+            <div className="pt-2 border-t border-outline-variant/50">
+              <LogoutLink className="block text-center bg-primary-container text-on-primary-container py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all">
+                LogOut
+              </LogoutLink>
+            </div>
+          )}
+        </div>
+      )}
+    </header>
   );
 }
 

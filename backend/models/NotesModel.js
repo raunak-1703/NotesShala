@@ -16,6 +16,13 @@ const NotesSchema = new schema({
     subject:{
         type: String
     },
+    subjectCode:{
+        type: String,
+    },
+    tags:{
+        type: [String],
+        default: [],
+    },
     file:{
         type: String,
     },
@@ -26,6 +33,9 @@ const NotesSchema = new schema({
         type: String,
     },
     mimeType:{
+        type: String,
+    },
+    description:{
         type: String,
     },
 },{

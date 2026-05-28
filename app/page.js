@@ -4,6 +4,7 @@ import ShareNotes from "./components/ShareNotes";
 import Contact from "./components/Contact";
 import Hero from "./components/hero";
 import About from "./components/about";
+import AuthOnly from "./components/AuthOnly";
 
 export default function Home() {
   return (
@@ -14,15 +15,17 @@ export default function Home() {
       <div>
         <About/>
       </div>
-      <div id="notes">
-        <NotesBranchWise />
-      </div>
-      <div id="reviews">
-        <TestimonialCarousel />
-      </div>
-      <div id="uploads">
-        <ShareNotes />
-      </div>
+      <AuthOnly>
+        <div id="notes">
+          <NotesBranchWise />
+        </div>
+        <div id="reviews">
+          <TestimonialCarousel />
+        </div>
+        <div id="uploads">
+          <ShareNotes />
+        </div>
+      </AuthOnly>
       <div id="contacts">
         <Contact />
       </div>

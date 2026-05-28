@@ -1,159 +1,235 @@
 "use client"
+
 import Link from 'next/link'
 import React from 'react'
 import useShowToast from '@/hooks/useShowToast'
 import { useAuth } from '@/app/lib/useAuth'
 
 const NotesBranchWise = () => {
-    const { isAuthenticated, isUnauthenticated, isLoading } = useAuth();
+    const { isAuthenticated, isUnauthenticated } = useAuth();
     const showToast = useShowToast();
-    return  (
-        <div 
-        className='py-20 min-h-screen bg-cover bg-center bg-no-repeat'
-        style={{ 
-            backgroundImage: "url('https://images.unsplash.com/photo-1527176930608-09cb256ab504?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
-        
-            
-        }}
-    >
-            <div className='px-10 py-5 mt-5 lg:ml-20 text-center '>
-                <h2 className='text-3xl lg:text-5xl font-semibold py-2 pb-4'>Notes</h2>
-                <p>Gets your hands on your study materials now !</p>
-            </div>
-            {isLoading && (
-                <div className="flex justify-center items-center mt-8 text-lg">
-                    Checking session...
-                </div>
-            )}
-            {isAuthenticated ? (<div className="flex justify-center items-center gap-10">
-                <div className='lg:w-[65vw] mt-8 flex flex-wrap justify-center items-center gap-10 lg:gap-16'>
-                    <div className="flex flex-col justify-center items-center">
-                        <Link href='/EE'>
-                            <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'>
-                                Electrical
-                            </div>
-                        </Link>
 
-                    </div>
-                    <div className="flex flex-col justify-center items-center">
-                        <Link href='/ECE'>
-                            <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl text-center flex justify-center items-center p-2  bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'>
-                                Electronics and Communication
-                            </div>
-                        </Link>
+    const handleUnauthClick = (branchName) => {
+        showToast('Error', `Please login/register to get ${branchName} notes`, 'error');
+    };
 
-                    </div>
-                    <div className="flex flex-col justify-center items-center">
-                        <Link href='/ME'>
-                            <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'>
-                                Mechanical
-                            </div>
-                        </Link>
-
-                    </div>
-                    <div className="flex flex-col justify-center items-center">
-                        <Link href='/CSE'>
-                            <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'>
-                                Computer Science
-                            </div>
-                        </Link>
-
-                    </div>
-                    <div className="flex flex-col justify-center items-center">
-                        <Link href='/CE'>
-                            <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'>
-                                Civil
-                            </div>
-                        </Link>
-                    </div>
-                    <div className="flex flex-col justify-center items-center">
-                        <Link href='/MME'>
-                            <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'>
-                                Material and Metallurgy
-                            </div>
-                        </Link>
-
-                    </div>
-                    <div className="flex flex-col justify-center items-center">
-                        <Link href='/PIE'>
-                            <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'>
-                                Production and Industrial
-                            </div>
-                        </Link>
-
-                    </div>
-                    <div className="flex flex-col justify-center items-center">
-                        <Link href='/ECM'>
-                            <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'>
-                                Computational mechanics
-                            </div>
-                        </Link>
+    return (
+        <section id="notes" className="py-16 md:py-24 bg-[#f2f4f6]/60 border-t border-b border-[#bdc8d1]/30">
+            <div className="max-w-[1280px] mx-auto px-8">
+                
+                {/* Header */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+                    <div className="max-w-2xl">
+                        <p className="text-sm font-semibold uppercase tracking-wide text-[#00658d]">Academic catalog</p>
+                        <h2 className="font-headline-lg text-headline-lg font-bold italic mt-2 text-[#191c1e]">
+                            Discover Your Specialized Path
+                        </h2>
+                        <p className="text-body-md text-[#576065] mt-2">
+                            Browse comprehensive peer-to-peer study materials organized by engineering branches. High-quality notes curated for your success.
+                        </p>
                     </div>
                 </div>
-            </div>) :
-                isUnauthenticated && (
-                    <div className="flex justify-center items-center gap-10">
-                        <div className='lg:w-[65vw] mt-8 flex flex-wrap justify-center items-center gap-10 lg:gap-16'>
-                            <div className="flex flex-col justify-center items-center">
-                                <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl cursor-pointer text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'
-                                    onClick={() => showToast('Error', 'Please login/register to get notes', 'error')}
-                                >
-                                    Electrical
-                                </div>
-                            </div>
-                            <div className="flex flex-col justify-center items-center">
-                                <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl cursor-pointer text-center flex justify-center items-center p-2  bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'
-                                    onClick={() => showToast('Error', 'Please login/register to get notes', 'error')}
-                                >
-                                    Electronics and Communication
-                                </div>
-                            </div>
-                            <div className="flex flex-col justify-center items-center">
-                                <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl cursor-pointer text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'
-                                    onClick={() => showToast('Error', 'Please login/register to get notes', 'error')}
-                                >
-                                    Mechanical
-                                </div>
-                            </div>
-                            <div className="flex flex-col justify-center items-center">
-                                <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl cursor-pointer text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'
-                                    onClick={() => showToast('Error', 'Please login/register to get notes', 'error')}
-                                >
-                                    Computer Science
-                                </div>
-                            </div>
-                            <div className="flex flex-col justify-center items-center">
-                                <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl cursor-pointer text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'
-                                    onClick={() => showToast('Error', 'Please login/register to get notes', 'error')}
-                                >
-                                    Civil
-                                </div>
-                            </div>
-                            <div className="flex flex-col justify-center items-center">
-                                <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl cursor-pointer text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'
-                                    onClick={() => showToast('Error', 'Please login/register to get notes', 'error')}
-                                >
-                                    Material and Metallurgy
-                                </div>
 
+                {/* Bento Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    {/* CSE (Card 1) */}
+                    {isAuthenticated ? (
+                        <Link href="/CSE" className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card shadow-sm hover:-translate-y-1">
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">memory</span>
                             </div>
-                            <div className="flex flex-col justify-center items-center">
-                                <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl cursor-pointer text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'
-                                    onClick={() => showToast('Error', 'Please login/register to get notes', 'error')}
-                                >
-                                    Production and Industrial
-                                </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">CSE</h3>
                             </div>
-                            <div className="flex flex-col justify-center items-center">
-                                <div className='w-32 h-28 md:w-40 md:h-36 rounded-xl cursor-pointer text-center flex justify-center items-center p-2 bg-gradient-to-r from-[#29b5f6] to-[#67c5f1d5] transition-all duration-300 hover:scale-105'>
-                                    Computational mechanics
-                                </div>
+                        </Link>
+                    ) : (
+                        <div 
+                            onClick={() => handleUnauthClick('CSE')}
+                            className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card cursor-pointer shadow-sm"
+                        >
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">memory</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">CSE</h3>
                             </div>
                         </div>
-                    </div>
-                )}
-        </div>
+                    )}
+
+                    {/* EE (Card 2) */}
+                    {isAuthenticated ? (
+                        <Link href="/EE" className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card shadow-sm hover:-translate-y-1">
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">bolt</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Electrical (EE)</h3>
+                            </div>
+                        </Link>
+                    ) : (
+                        <div 
+                            onClick={() => handleUnauthClick('Electrical')}
+                            className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card cursor-pointer shadow-sm"
+                        >
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">bolt</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Electrical (EE)</h3>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ME (Card 3) */}
+                    {isAuthenticated ? (
+                        <Link href="/ME" className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card shadow-sm hover:-translate-y-1">
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">settings</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Mechanical</h3>
+                            </div>
+                        </Link>
+                    ) : (
+                        <div 
+                            onClick={() => handleUnauthClick('Mechanical')}
+                            className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card cursor-pointer shadow-sm"
+                        >
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">settings</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Mechanical</h3>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* CE (Card 4) */}
+                    {isAuthenticated ? (
+                        <Link href="/CE" className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card shadow-sm hover:-translate-y-1">
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">domain</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Civil (CE)</h3>
+                            </div>
+                        </Link>
+                    ) : (
+                        <div 
+                            onClick={() => handleUnauthClick('Civil')}
+                            className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card cursor-pointer shadow-sm"
+                        >
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">domain</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Civil (CE)</h3>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* MME (Card 5) */}
+                    {isAuthenticated ? (
+                        <Link href="/MME" className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card shadow-sm hover:-translate-y-1">
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">science</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Metallurgy (MME)</h3>
+                            </div>
+                        </Link>
+                    ) : (
+                        <div 
+                            onClick={() => handleUnauthClick('Material and Metallurgy')}
+                            className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card cursor-pointer shadow-sm"
+                        >
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">science</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Metallurgy (MME)</h3>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ECE (Card 6) */}
+                    {isAuthenticated ? (
+                        <Link href="/ECE" className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card shadow-sm hover:-translate-y-1">
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">radar</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Electronics (ECE)</h3>
+                            </div>
+                        </Link>
+                    ) : (
+                        <div 
+                            onClick={() => handleUnauthClick('Electronics and Communication')}
+                            className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card cursor-pointer shadow-sm"
+                        >
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">radar</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Electronics (ECE)</h3>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* PIE (Card 7) */}
+                    {isAuthenticated ? (
+                        <Link href="/PIE" className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card shadow-sm hover:-translate-y-1">
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">precision_manufacturing</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Production (PIE)</h3>
+                            </div>
+                        </Link>
+                    ) : (
+                        <div 
+                            onClick={() => handleUnauthClick('Production and Industrial')}
+                            className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card cursor-pointer shadow-sm"
+                        >
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">precision_manufacturing</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Production (PIE)</h3>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ECM (Card 8) */}
+                    {isAuthenticated ? (
+                        <Link href="/ECM" className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card shadow-sm hover:-translate-y-1">
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">calculate</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Computational</h3>
+                            </div>
+                        </Link>
+                    ) : (
+                        <div 
+                            onClick={() => handleUnauthClick('Computational mechanics')}
+                            className="bg-white border border-[#bdc8d1] p-6 rounded-2xl flex flex-col justify-between hover:bg-[#c6e7ff]/20 transition-all bento-card cursor-pointer shadow-sm"
+                        >
+                            <div className="w-14 h-14 bg-[#f2f4f6] rounded-full flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined text-[#00658d] text-3xl">calculate</span>
+                            </div>
+                            <div>
+                                <h3 className="font-headline-sm text-headline-sm text-[#191c1e] font-bold">Computational</h3>
+                            </div>
+                        </div>
+                    )}
+
+                </div>
+
+            </div>
+        </section>
     )
 }
 
-export default NotesBranchWise
+export default NotesBranchWise;

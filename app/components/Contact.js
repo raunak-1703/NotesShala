@@ -1,7 +1,7 @@
 "use client"
+
 import React, { useState } from 'react'
 import Link from 'next/link';
-import { HiOutlineMail, HiOutlinePhone } from 'react-icons/hi';
 import useShowToast from '@/hooks/useShowToast'
 import { useAuth } from '@/app/lib/useAuth'
 
@@ -9,105 +9,175 @@ const Contact = () => {
     const [name, setName] = useState('')
     const [message, setMessage] = useState('')
 
-    const {isAuthenticated, isUnauthenticated, isLoading} = useAuth();
+    const { isAuthenticated, isUnauthenticated, isLoading } = useAuth();
     const showToast = useShowToast(); 
+    const [submitting, setSubmitting] = useState(false);
 
-    // const handleclick = () => {
-    //     if(!name || !message){
-    //         showToast("Error", "All feild must be filled", 'error')
-    //     }
-    //     else{
-    //         showToast('Success', 'Thank you! Your form is submitted', 'success')
-    //         setName('');
-    //         setMessage('');
-    //     }
-    // }
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (name == '' || message == '') {
-            showToast("error", "Please fill all the credentials!")
+        if (name === '' || message === '') {
+            showToast("Error", "Please fill all fields!", "error")
             return;
         }
 
-        const formData = new FormData();
-        formData.append("name",name)
-        formData.append("message",message)
-    
-        formData.append("access_key", process.env.NEXT_PUBLIC_WEB3FORMS_KEY);
-    
-        const response = await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          body: formData
-        });
-    
-        const data = await response.json();
-    
-        if (data.success) {
-            showToast("success", "message sent successfully");
-            setName('');
-            setMessage('');
-        } else {
-          console.log("Error", data);
-          showToast("error", data.message);
+        setSubmitting(true);
+        try {
+            const formData = new FormData();
+            formData.append("name", name)
+            formData.append("message", message)
+            formData.append("access_key", process.env.NEXT_PUBLIC_WEB3FORMS_KEY);
+        
+            const response = await fetch("https://api.web3forms.com/submit", {
+              method: "POST",
+              body: formData
+            });
+        
+            const data = await response.json();
+        
+            if (data.success) {
+                showToast("success", "Message sent successfully", "success");
+                setName('');
+                setMessage('');
+            } else {
+                console.error("Error", data);
+                showToast("error", data.message || "Submission failed", "error");
+            }
+        } catch (err) {
+            showToast("error", err.message, "error");
+        } finally {
+            setSubmitting(false);
         }
     };
+
     return (
-        <div>
-            <div className='flex md:justify-evenly justify-center md:flex-row flex-col items-center px-4 py-4'>
-                {/* Left side */}
-                <div className='flex flex-col justify-center items-center'>
-                    <p className="md:text-5xl text-3xl font-bold text-black md:mb-12 mb-5 md:ml-8">CONTACT</p>
-                    {/* Email icon */}
-                    <div className="flex items-center mt-2 md:ml-8">
-                        <HiOutlineMail className="mr-2" size={20} />
-                        <span>Email: teaminnoreva@nitjsr.ac.in</span>
-                    </div>
-                    {/* Phone icon */}
-                    <div className="flex items-center mt-2 md:ml-8">
-                        <HiOutlinePhone className="mr-2" size={20} />
-                        <span>Phone: +91 7004632130</span>
-                    </div>
-                    <div className="flex items-center mt-2 md:ml-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
-</svg>
-                        <span className='hover:underline hover:cursor-pointer hover:text-[gray]'><Link href="/members">Designed and Developed by &rarr;
-                        </Link> </span>
-                        
-                    </div>
-                    <span className='flex items-center mt-6 w-28'><img src="/innoreva_logo.png" alt="" /></span>
-                </div>
-                {/* Right side */}
-                <div className="bg-lightblue rounded-lg p-4 mt-7 md:mt-0">
-                    <div className="bg-dark-blue rounded-lg p-4 lg:py-10">
-                        <h3 className="text-xl mb-2 text-white">Share Your Experience With Us!</h3>
-                        <div className="p-4 bg-dark-blue rounded-lg">
-                            <input type="text" className="w-full p-2 mb-2 border border-blue-500 rounded-lg bg-light-blue" placeholder="Your Name" 
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                            <textarea className="w-full p-2 border border-blue-500 rounded-lg bg-light-blue" rows="4" placeholder="Your Review"
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                            ></textarea>
+        <section id="contacts" className="py-16 md:py-24 bg-white text-[#191c1e] relative overflow-hidden">
+            {/* Background decoration */}
+            <div className="absolute -bottom-10 -left-10 w-44 h-44 bg-[#83cfff]/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div className="max-w-[1280px] mx-auto px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                    
+                    {/* Left Column - Contact Info */}
+                    <div className="lg:col-span-5 space-y-8">
+                        <div>
+                            <span className="text-sm font-semibold uppercase tracking-wide text-[#00658d]">Get in touch</span>
+                            <h2 className="font-headline-xl text-headline-xl italic font-bold mt-2">CONTACT US</h2>
                         </div>
-                        <div className='flex justify-center items-center'>
-                            {isAuthenticated ? (<div onClick={handleSubmit} className='border cursor-pointer w-32 border-blue-500 rounded-lg bg-light-blue p-2 text-center hover:scale-[1.02]'>
-                                Submit
-                            </div>) : isLoading ? (
-                            <div className='border w-32 border-blue-500 rounded-lg bg-light-blue p-2 text-center opacity-70'>
-                                Checking...
-                            </div>) : isUnauthenticated && (
-                            <div onClick={() => showToast('Error','Not Authorised Please Login !','error')} className='border cursor-pointer w-32 border-blue-500 rounded-lg bg-light-blue p-2 text-center hover:scale-[1.02]'>
-                                Submit
-                            </div>)}
+
+                        <div className="bg-[#f2f4f6] border border-[#bdc8d1]/60 rounded-2xl p-6 space-y-5 shadow-sm">
+                            {/* Email */}
+                            <div className="flex items-start gap-4">
+                                <div className="bg-white p-2.5 rounded-xl border border-[#bdc8d1]/30 text-[#00658d] flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-[22px]">mail</span>
+                                </div>
+                                <div>
+                                    <h4 className="font-label-sm text-label-sm text-[#576065] uppercase tracking-wider font-bold">Email Support</h4>
+                                    <p className="font-label-md text-label-md text-[#191c1e] mt-1 font-semibold">teaminnoreva@nitjsr.ac.in</p>
+                                </div>
+                            </div>
+
+                            {/* Phone */}
+                            <div className="flex items-start gap-4">
+                                <div className="bg-white p-2.5 rounded-xl border border-[#bdc8d1]/30 text-[#00658d] flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-[22px]">call</span>
+                                </div>
+                                <div>
+                                    <h4 className="font-label-sm text-label-sm text-[#576065] uppercase tracking-wider font-bold">Call Support</h4>
+                                    <p className="font-label-md text-label-md text-[#191c1e] mt-1 font-semibold">+91 7004632130</p>
+                                </div>
+                            </div>
+
+                            {/* Design Credits */}
+                            <div className="flex items-start gap-4 pt-4 border-t border-[#bdc8d1]/40">
+                                <div className="bg-white p-2.5 rounded-xl border border-[#bdc8d1]/30 text-[#00658d] flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-[22px]">architecture</span>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="font-label-sm text-label-sm text-[#576065] uppercase tracking-wider font-bold">Platform Credits</h4>
+                                    <Link href="/members" className="font-label-md text-label-md text-[#00658d] hover:underline font-bold mt-1 inline-flex items-center gap-1.5">
+                                        Designed &amp; Developed by Team Innoreva &rarr;
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Innoreva Logo Container */}
+                        <div className="flex items-center gap-4 select-none text-xl">
+                            <span className="text-[#576065] text-xl font-semibold">Brought to you by:</span>
+                            <img src="/innoreva_logo.png" alt="Innoreva Logo" className="h-20 object-contain brightness-95 opacity-90" />
                         </div>
                     </div>
+
+                    {/* Right Column - Review/Feedback Form */}
+                    <div className="lg:col-span-7">
+                        <div className="bg-white border border-[#bdc8d1] rounded-3xl p-8 shadow-[0_10px_40px_rgba(0,173,239,0.04)] relative overflow-hidden">
+                            {/* Decorative banner design */}
+                            <div className="absolute top-0 right-0 w-36 h-36 bg-[#00adef]/5 rounded-bl-full pointer-events-none"></div>
+
+                            <h3 className="font-headline-md text-headline-md font-bold mb-6 text-[#191c1e] italic">
+                                Share Your Experience With Us!
+                            </h3>
+
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div className="flex flex-col gap-2">
+                                    <label className="font-label-md text-label-md text-on-surface">Full Name</label>
+                                    <input 
+                                        type="text" 
+                                        className="w-full bg-[#f2f4f6] border border-[#bdc8d1] rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#00adef]/30 focus:border-[#00658d] outline-none transition-all placeholder:text-[#bfc8ce]" 
+                                        placeholder="Your Name" 
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <label className="font-label-md text-label-md text-on-surface">Your Review</label>
+                                    <textarea 
+                                        className="w-full bg-[#f2f4f6] border border-[#bdc8d1] rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#00adef]/30 focus:border-[#00658d] outline-none transition-all placeholder:text-[#bfc8ce] resize-none" 
+                                        rows="4" 
+                                        placeholder="Type your message here..."
+                                        value={message}
+                                        onChange={(e) => setMessage(e.target.value)}
+                                    ></textarea>
+                                </div>
+
+                                <div className="pt-2">
+                                    {isAuthenticated ? (
+                                        <button 
+                                            type="submit"
+                                            disabled={submitting}
+                                            className="w-full bg-[#00658d] text-white py-3.5 rounded-xl font-label-md text-label-md uppercase tracking-wider hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2 hover:shadow-md disabled:opacity-50"
+                                        >
+                                            <span className="material-symbols-outlined text-[18px]">send</span>
+                                            {submitting ? 'Submitting...' : 'Submit Message'}
+                                        </button>
+                                    ) : isLoading ? (
+                                        <button 
+                                            disabled 
+                                            className="w-full bg-[#00658d] text-white py-3.5 rounded-xl font-label-md text-label-md opacity-70 flex items-center justify-center gap-2 cursor-wait"
+                                        >
+                                            Checking auth state...
+                                        </button>
+                                    ) : isUnauthenticated && (
+                                        <button 
+                                            type="button"
+                                            onClick={() => showToast('Error', 'Not Authorized, Please Login!', 'error')} 
+                                            className="w-full bg-[#00658d] text-white py-3.5 rounded-xl font-label-md text-label-md uppercase tracking-wider hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2 hover:shadow-md"
+                                        >
+                                            <span className="material-symbols-outlined text-[18px]">lock</span>
+                                            Login to Submit Review
+                                        </button>
+                                    )}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
-    )
-}
+        </section>
+    );
+};
 
-export default Contact
+export default Contact;
